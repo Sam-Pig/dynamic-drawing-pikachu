@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="default.css">
+    <link rel="stylesheet" href="vendor/prismjs/prism.css">
+    <script src='vendor/prismjs/prism.js'></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <title>Document</title>
+    <style id="styleTag">
+    </style>
+</head>
+<body>
+    <div class="code">
+        <pre id="code"></pre>
+        <div class="speed">
+            <button data-speed="slow">慢速</button>
+            <button data-speed="medium" class='active'>中速</button>
+            <button data-speed="fast">高速</button>
+        </div>
+    </div>
+    <div class="preview">
+        <div class = "wrapper">
+            <div class="lowLipOuter">
+                <div class="lowLip"></div>
+            </div>
+            <div class="nose"></div>
+            <div class="leftEye eye"></div>
+            <div class="rightEye eye"></div>
+            <div class="leftFace face"></div>
+            <div class="rightFace face"></div>
+            <div class="upperLip leftUpperLip"></div>
+            <div class="upperLip rightUpperLip"></div>
+        </div>
+    </div>
+    <script>
+        var result = `
+        /*一起用CSS来画一只皮卡丘吧！！*/
+        html{
+            perspective: 1000px;
+            color: white;
+        }
+        .code{
+            border: 1px solid #ffffff;
+        }
+        .preview{
+            background-color: #ffdd33;
+        }
+        .wrapper{
+            width: 100%;
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+        .nose{
+            width: 0px;
+            height: 0px;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 28px;
+            margin-left: -11px;
+            border: 11px solid transparent;
+            border-color: black transparent transparent transparent;
+        }
+        .eye{
+            width: 49px;
+            height: 49px;
+            background-color: black;
+            position: absolute;
+            border-radius: 50%;
+        }
+        .eye::after{
+            box-sizing: border-box;
+            content: '';
+            display: block;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            left: 7px;
+            top: 4px;
+        }
+        .leftEye{
+            right: 50%;
+            margin-right: 90px;
+        }
+        .rightEye{
+            left: 50%;
+            margin-left: 90px;
+        }
+        .face{
+            width: 68px;
+            height: 68px;
+            background-color: #f5231a;
+            border: 2px solid black;
+            border-radius: 50%;
+            position: absolute;
+            top: 85px;
+        }
+        .leftFace{
+            right: 50%;
+            margin-right: 116px;
+        }
+        .rightFace{
+            left: 50%;
+            margin-left: 116px;
+        }
+        .upperLip{
+            height: 18px;
+            width: 64px;
+            border: 3px solid black;
+            position: absolute;
+            background-color: #ffdd33;
+        }
+        .leftUpperLip{
+            border-top: none;
+            border-right: none;
+            border-bottom-left-radius: 40px 20px;
+            transform: rotate(-20deg);
+            right: 50%;
+            top: 50px;
+        }
+        .rightUpperLip{
+            border-top: none;
+            border-left: none;
+            border-bottom-right-radius: 40px 20px;
+            transform: rotate(20deg);
+            left: 50%;
+            top: 50px;
+        }
+        .lowLip{
+            width: 130px;
+            height: 700px;
+            background-color: #a61513;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            margin-left: -65px;
+            bottom: 0px;
+            overflow: hidden;
+        }
+        .lowLipOuter{
+            width: 140px;
+            height: 115px;
+            position: absolute;
+            left: 50%;
+            margin-left: -70px;
+            top: 55px;
+            overflow: hidden;
+        }
+        .lowLip::after{
+            box-sizing: border-box;
+            content: '';
+            display: block;
+            width: 100px;
+            height: 115px;
+            background-color: #ff5e64;
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            margin-left: -50px;
+            border-radius: 50%;
+        }
+        `
+        var duration = 50;
+        $('.speed').on('click','button',function(e){
+             let speed = $(e.currentTarget).attr('data-speed');
+             $(e.currentTarget).addClass('active').siblings('.active').removeClass('active');
+             switch(speed){
+                 case 'slow':
+                 duration = 100;
+                 break;
+                 case 'medium':
+                 duration = 50;
+                 break;
+                 case 'fast':
+                 duration = 10;
+             }
+         })
+        writeCode('',result,()=>{
+            console.log('完成');
+        })
+        function writeCode(preCode,code,fn){
+            let domCode = document.querySelector('#code');
+            let styleTag = document.querySelector('#styleTag');
+            let n = 0;
+            let time = setTimeout(function run(){
+               n = n + 1;
+               domCode.innerHTML = Prism.highlight(preCode + code.substring(0,n) , Prism.languages.css);
+               styleTag.innerHTML = preCode + code.substring(0,n);
+               domCode.scrollTop = domCode.scrollHeight;
+               if(n >= code.length){
+                   fn && fn.call();
+               }else{
+                   setTimeout(run,duration);
+               }
+            },duration)
+         }
+         
+         
+    </script>
+</body>
+</html>
